@@ -268,7 +268,7 @@ namespace FFXIVRichPresenceRunner.Memory
         {
             if (!isAdmin())
             {
-                Debug.Write("WARNING: You are NOT running this program as admin! Visit https://github.com/erfg12/memory.dll/wiki/Administrative-Privileges");
+                Console.WriteLine("WARNING: You are NOT running this program as admin! Visit https://github.com/erfg12/memory.dll/wiki/Administrative-Privileges");
             }
 
             try
@@ -306,7 +306,7 @@ namespace FFXIVRichPresenceRunner.Memory
             }
             catch (Exception exc)
             {
-                Debug.WriteLine("Failed to open process: " + exc);
+                Console.WriteLine("Failed to open process: " + exc);
                 return false;
             }
         }

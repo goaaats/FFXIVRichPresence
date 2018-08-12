@@ -26,8 +26,16 @@ namespace FFXIVRichPresenceRunner
 
         static void Main(string[] args)
         {
+            while (!DoesFfxivProcessExist())
+            {
+                Console.WriteLine("Waiting for FFXIV process...");
+                System.Threading.Thread.Sleep(200);
+            }
+
+            /*
             if (args.Length > 0)
                 ShowWindow(GetConsoleWindow(), SW_HIDE);
+                */
 
             Run();
 
@@ -35,6 +43,15 @@ namespace FFXIVRichPresenceRunner
             {
                 
             }
+        }
+
+        public static bool DoesFfxivProcessExist()
+        {
+            var processes = Process.GetProcesses();
+
+            var process = processes.Where(x => x.ProcessName == "ffxiv_dx11");
+
+            return process.ToList().Count > 0;
         }
 
         public static async void Run()

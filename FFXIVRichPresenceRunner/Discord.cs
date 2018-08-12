@@ -19,7 +19,7 @@ namespace FFXIVRichPresenceRunner
             State = "",
             Assets = new Assets()
             {
-                LargeImageKey = "zone_628",
+                LargeImageKey = "eorzea_map",
                 LargeImageText = "",
                 SmallImageKey = "class_0",
                 SmallImageText = ""
