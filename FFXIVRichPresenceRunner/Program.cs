@@ -23,6 +23,8 @@ namespace FFXIVRichPresenceRunner
 
         private static void Main(string[] args)
         {
+            Console.WriteLine(Definitions.Json);
+
             while (!DoesFfxivProcessExist())
             {
                 Console.WriteLine("Waiting for FFXIV process...");

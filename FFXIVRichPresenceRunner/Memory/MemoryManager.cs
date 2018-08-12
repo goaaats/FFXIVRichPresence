@@ -19,27 +19,27 @@ namespace FFXIVPlayerWardrobe.Memory
 
         public int GetTimeOffset()
         {
-            return _memory.readInt(Definitions.Instance.TIMEOFFSETPTR);
+            return _memory.readInt(Definitions.Instance.TimePtr);
         }
 
         public void SetTimeOffset(int offset)
         {
-            _memory.writeMemory(Definitions.Instance.TIMEOFFSETPTR, "int", offset.ToString());
+            _memory.writeMemory(Definitions.Instance.TimePtr, "int", offset.ToString());
         }
 
         public int GetTerritoryType()
         {
-            return _memory.readInt(Definitions.Instance.TERRITORYTYPEOFFSETPTR);
+            return _memory.readInt(Definitions.Instance.TerritoryTypePtr);
         }
 
         public int GetWeather()
         {
-            return _memory.readByte(Definitions.Instance.WEATHEROFFSETPTR);
+            return _memory.readByte(Definitions.Instance.WeatherPtr);
         }
 
         public void SetWeather(byte id)
         {
-            _memory.writeBytes(Definitions.Instance.WEATHEROFFSETPTR, new[] {id});
+            _memory.writeBytes(Definitions.Instance.WeatherPtr, new[] {id});
         }
 
         #endregion
@@ -62,7 +62,7 @@ namespace FFXIVPlayerWardrobe.Memory
 
         public int GetActorTableLength()
         {
-            return _memory.readByte(Definitions.Instance.ACTORTABLEOFFSET);
+            return _memory.readByte(Definitions.Instance.ActorTableOffset);
         }
 
         public ActorTableEntry[] GetActorTable()
@@ -79,7 +79,7 @@ namespace FFXIVPlayerWardrobe.Memory
         {
             var offsets = new List<UIntPtr>();
 
-            var tableOffset = _memory.getCode(Definitions.Instance.ACTORTABLEOFFSET, "") + 0x8;
+            var tableOffset = _memory.getCode(Definitions.Instance.ActorTableOffset, "") + 0x8;
 
             for (var i = 0; i < GetActorTableLength(); i++)
                 offsets.Add(_memory.getCode(((long) (tableOffset + i * 8)).ToString("X") + ",0", ""));
@@ -95,15 +95,15 @@ namespace FFXIVPlayerWardrobe.Memory
             return new ActorTableEntry
             {
                 Offset = offset,
-                ActorID = BitConverter.ToUInt32(data, 0x74),
-                Name = Encoding.UTF8.GetString(data, 0x30, 32),
-                BnpcBase = BitConverter.ToUInt32(data, 0x80),
-                OwnerID = BitConverter.ToUInt32(data, 0x84),
-                ModelChara = BitConverter.ToInt16(data, 0x16FC),
-                Job = data[0x1738],
-                Level = data[0x173A],
-                World = data[0x16F4],
-                CompanyTag = Encoding.UTF8.GetString(data, 0x164A, 6)
+                ActorID = BitConverter.ToUInt32(data, Definitions.Instance.ActorIDOffset),
+                Name = Encoding.UTF8.GetString(data, Definitions.Instance.NameOffset, 32),
+                BnpcBase = BitConverter.ToUInt32(data, Definitions.Instance.BnpcBaseOffset),
+                OwnerID = BitConverter.ToUInt32(data, Definitions.Instance.OwnerIDOffset),
+                ModelChara = BitConverter.ToInt16(data, Definitions.Instance.ModelCharaOffset),
+                Job = data[Definitions.Instance.JobOffset],
+                Level = data[Definitions.Instance.LevelOffset],
+                World = data[Definitions.Instance.WorldOffset],
+                CompanyTag = Encoding.UTF8.GetString(data, Definitions.Instance.CompanyTagOffset, 6)
             };
         }
 
