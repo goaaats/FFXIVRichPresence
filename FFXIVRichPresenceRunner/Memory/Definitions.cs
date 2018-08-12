@@ -11,7 +11,7 @@ namespace FFXIVRichPresenceRunner.Memory
     class Definitions
     {
         private static Definitions _cachedInstance = null;
-        private const string DEFINITION_JSON_URL = "https://raw.githubusercontent.com/goaaats/FFXIVPlayerWardrobe/master/definitiones.json";
+        private const string DEFINITION_JSON_URL = "https://raw.githubusercontent.com/goaaats/FFXIVRichPresence/master/definitions.json";
 
         public static Definitions Instance
         {
