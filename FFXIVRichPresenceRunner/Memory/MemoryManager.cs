@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using FFXIVRichPresenceRunner.Memory;
 
 namespace FFXIVPlayerWardrobe.Memory
 {
-    public partial class MemoryManager
+    public class MemoryManager
     {
         private readonly Mem _memory;
 
@@ -52,12 +50,14 @@ namespace FFXIVPlayerWardrobe.Memory
         {
             public long Offset { get; set; }
             public string Name { get; set; }
-            public UInt32 ActorID { get; set; }
-            public UInt32 OwnerID { get; set; }
+            public string CompanyTag { get; set; }
+            public uint ActorID { get; set; }
+            public uint OwnerID { get; set; }
             public short ModelChara { get; set; }
-            public UInt32 BnpcBase { get; set; }
+            public uint BnpcBase { get; set; }
             public byte Job { get; set; }
             public byte Level { get; set; }
+            public byte World { get; set; }
         }
 
         public int GetActorTableLength()
@@ -67,27 +67,22 @@ namespace FFXIVPlayerWardrobe.Memory
 
         public ActorTableEntry[] GetActorTable()
         {
-            List<ActorTableEntry> entries = new List<ActorTableEntry>();
+            var entries = new List<ActorTableEntry>();
             var offsets = GetActorTableOffsetList();
 
-            foreach (var offset in offsets)
-            {
-                entries.Add(GetActorTableEntry((long)offset));
-            }
+            foreach (var offset in offsets) entries.Add(GetActorTableEntry((long) offset));
 
             return entries.ToArray();
         }
 
         public UIntPtr[] GetActorTableOffsetList()
         {
-            List<UIntPtr> offsets = new List<UIntPtr>();
+            var offsets = new List<UIntPtr>();
 
             var tableOffset = _memory.getCode(Definitions.Instance.ACTORTABLEOFFSET, "") + 0x8;
 
-            for (int i = 0; i < GetActorTableLength(); i++)
-            {
-                offsets.Add(_memory.getCode(((long)(tableOffset + i * 8)).ToString("X") + ",0", ""));
-            }
+            for (var i = 0; i < GetActorTableLength(); i++)
+                offsets.Add(_memory.getCode(((long) (tableOffset + i * 8)).ToString("X") + ",0", ""));
 
             return offsets.ToArray();
         }
@@ -106,7 +101,9 @@ namespace FFXIVPlayerWardrobe.Memory
                 OwnerID = BitConverter.ToUInt32(data, 0x84),
                 ModelChara = BitConverter.ToInt16(data, 0x16FC),
                 Job = data[0x1738],
-                Level = data[0x173A]
+                Level = data[0x173A],
+                World = data[0x16F4],
+                CompanyTag = Encoding.UTF8.GetString(data, 0x164A, 6)
             };
         }
 
@@ -121,18 +118,16 @@ namespace FFXIVPlayerWardrobe.Memory
                 return false;
             }
 
-            for (int i = 0; i < table.Length; i++)
-            {
+            for (var i = 0; i < table.Length; i++)
                 if (table[i].ActorID == entry.ActorID)
                 {
-                    Debug.WriteLine("Found at " + ((long)offsets[i]).ToString("X"));
+                    Debug.WriteLine("Found at " + ((long) offsets[i]).ToString("X"));
                     _memory.writeBytes(((long) offsets[i] + 0x30).ToString("X"), new byte[32]);
                     _memory.writeMemory(((long) offsets[i] + 0x30).ToString("X"), "string", entry.Name);
                     _memory.writeMemory(((long) offsets[i] + 0x80).ToString("X"), "int", entry.BnpcBase.ToString());
                     _memory.writeMemory(((long) offsets[i] + 0x16FC).ToString("X"), "int", entry.ModelChara.ToString());
                     return true;
                 }
-            }
 
             return false;
         }

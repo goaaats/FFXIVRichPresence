@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
@@ -10,9 +9,21 @@ namespace FFXIVRichPresenceRunner
     {
         private const string URL = "http://xivapi.com/";
 
-        private static Dictionary<int, string> _cachedTerritoryTypeZoneNames = new Dictionary<int, string>();
-        private static Dictionary<int, string> _cachedTerritoryTypeNames = new Dictionary<int, string>();
-        private static Dictionary<int, string> _cachedJobNames = new Dictionary<int, string>();
+        private static readonly Dictionary<int, string> _cachedTerritoryTypeZoneNames = new Dictionary<int, string>();
+        private static readonly Dictionary<int, string> _cachedTerritoryTypeNames = new Dictionary<int, string>();
+        private static readonly Dictionary<int, string> _cachedJobNames = new Dictionary<int, string>();
+        private static readonly Dictionary<int, string> _cachedWorldNames = new Dictionary<int, string>();
+
+        public static async Task<string> GetNameForWorld(int world)
+        {
+            if (_cachedWorldNames.ContainsKey(world))
+                return _cachedWorldNames[world];
+
+            var res = await Get("World/" + world);
+            _cachedWorldNames.Add(world, (string) res.PlaceNameZone.Name_en);
+
+            return res.PlaceNameZone.Name_en;
+        }
 
         public static async Task<string> GetPlaceNameZoneForTerritoryType(int territorytype)
         {
@@ -51,10 +62,7 @@ namespace FFXIVRichPresenceRunner
         {
             var requestParameters = "?";
 
-            foreach (var parameter in parameters)
-            {
-                requestParameters += parameter + "&";
-            }
+            foreach (var parameter in parameters) requestParameters += parameter + "&";
 
             var client = new HttpClient();
             var response = await client.PostAsync(URL + endpoint, new StringContent(requestParameters));

@@ -1,17 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace FFXIVRichPresenceRunner.Memory
 {
-    class Definitions
+    internal class Definitions
     {
-        private static Definitions _cachedInstance = null;
-        private const string DEFINITION_JSON_URL = "https://raw.githubusercontent.com/goaaats/FFXIVRichPresence/master/definitions.json";
+        private const string DEFINITION_JSON_URL =
+            "https://raw.githubusercontent.com/goaaats/FFXIVRichPresence/master/definitions.json";
+
+        private static Definitions _cachedInstance;
+
+        public string ACTORTABLEOFFSET = "ffxiv_dx11.exe+18FF6B8";
+
+        public string ClientID = "478143453536976896";
+        public string TERRITORYTYPEOFFSETPTR = "ffxiv_dx11.exe+1936928,4C"; // 4 byte
+
+        public string TIMEOFFSETPTR = "ffxiv_dx11.exe+18E3330,10,8,28,80"; // 4 byte
+        public string WEATHEROFFSETPTR = "ffxiv_dx11.exe+18E1278,27"; // 1 byte
 
         public static Definitions Instance
         {
@@ -20,7 +26,7 @@ namespace FFXIVRichPresenceRunner.Memory
                 if (_cachedInstance != null)
                     return _cachedInstance;
 
-                using (WebClient client = new WebClient())
+                using (var client = new WebClient())
                 {
                     try
                     {
@@ -39,13 +45,5 @@ namespace FFXIVRichPresenceRunner.Memory
         }
 
         public static string Json => JsonConvert.SerializeObject(new Definitions());
-
-        public string TIMEOFFSETPTR = "ffxiv_dx11.exe+18E3330,10,8,28,80"; // 4 byte
-        public string WEATHEROFFSETPTR = "ffxiv_dx11.exe+18E1278,27"; // 1 byte
-        public string TERRITORYTYPEOFFSETPTR = "ffxiv_dx11.exe+1936928,4C"; // 4 byte
-
-        public string ACTORTABLEOFFSET = "ffxiv_dx11.exe+18FF6B8";
-
-        public string ClientID = "478143453536976896";
     }
 }

@@ -1,37 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using System.Threading;
 using DiscordRPC;
-using DiscordRPC.Logging;
 using FFXIVPlayerWardrobe.Memory;
 using FFXIVRichPresenceRunner.Memory;
 
 namespace FFXIVRichPresenceRunner
 {
-    class Program
+    internal class Program
     {
+        private const int SW_HIDE = 0;
+        private const int SW_SHOW = 5;
+
         [DllImport("kernel32.dll")]
-        static extern IntPtr GetConsoleWindow();
+        private static extern IntPtr GetConsoleWindow();
 
         [DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-        const int SW_HIDE = 0;
-        const int SW_SHOW = 5;
-
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Console.WriteLine(Definitions.Json);
-
             while (!DoesFfxivProcessExist())
             {
                 Console.WriteLine("Waiting for FFXIV process...");
-                System.Threading.Thread.Sleep(200);
+                Thread.Sleep(200);
             }
 
             /*
@@ -43,7 +38,6 @@ namespace FFXIVRichPresenceRunner
 
             while (true)
             {
-                
             }
         }
 
@@ -58,7 +52,7 @@ namespace FFXIVRichPresenceRunner
 
         public static async void Run()
         {
-            Mem memory = new Mem();
+            var memory = new Mem();
             if (!memory.OpenProcess("ffxiv_dx11"))
             {
                 Console.WriteLine("An error occurred opening the FFXIV process.\nPress any key to continue...");
@@ -67,9 +61,9 @@ namespace FFXIVRichPresenceRunner
                 Environment.Exit(0);
             }
 
-            Discord discordManager = new Discord();
+            var discordManager = new Discord();
 
-            MemoryManager memoryManager = new MemoryManager(memory);
+            var memoryManager = new MemoryManager(memory);
 
             discordManager.SetDefaultPresence();
 
@@ -85,13 +79,17 @@ namespace FFXIVRichPresenceRunner
                     var territoryType = memoryManager.GetTerritoryType();
 
                     var placename = await XivApi.GetPlaceNameZoneForTerritoryType(territoryType);
-                    var zoneAsset = "zone_" + Regex.Replace(placename.ToLower(), "[^A-Za-z0-9]","");
+                    var zoneAsset = "zone_" + Regex.Replace(placename.ToLower(), "[^A-Za-z0-9]", "");
 
-                    discordManager.SetPresence(new RichPresence()
+                    var fcName = player.CompanyTag.Substring(0, player.CompanyTag.IndexOf("\0"));
+
+                    if (fcName != string.Empty) fcName = $" <{fcName}>";
+
+                    discordManager.SetPresence(new RichPresence
                     {
-                        Details = $"{player.Name.Substring(0, player.Name.IndexOf("\0"))}",
-                        State = "Idle",
-                        Assets = new Assets()
+                        Details = $"{player.Name.Substring(0, player.Name.IndexOf("\0"))}{fcName}",
+                        //State = await XivApi.GetNameForWorld(player.World),
+                        Assets = new Assets
                         {
                             LargeImageKey = zoneAsset,
                             LargeImageText = await XivApi.GetPlaceNameForTerritoryType(territoryType),
@@ -105,7 +103,13 @@ namespace FFXIVRichPresenceRunner
                     discordManager.SetDefaultPresence();
                 }
 
-                System.Threading.Thread.Sleep(1000);
+                Thread.Sleep(1000);
+
+                if (!DoesFfxivProcessExist())
+                {
+                    discordManager.Deinitialize();
+                    Environment.Exit(0);
+                }
             }
         }
     }
