@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using FFXIVRichPresenceRunner.Memory;
 
-namespace FFXIVPlayerWardrobe.Memory
+namespace FFXIVRichPresenceRunner.Memory
 {
     public class MemoryManager
     {

@@ -5,7 +5,6 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using DiscordRPC;
-using FFXIVPlayerWardrobe.Memory;
 using FFXIVRichPresenceRunner.Memory;
 
 namespace FFXIVRichPresenceRunner
@@ -13,7 +12,6 @@ namespace FFXIVRichPresenceRunner
     internal class Program
     {
         private const int SW_HIDE = 0;
-        private const int SW_SHOW = 5;
 
         [DllImport("kernel32.dll")]
         private static extern IntPtr GetConsoleWindow();
@@ -34,11 +32,6 @@ namespace FFXIVRichPresenceRunner
             #if !DEBUG
             ShowWindow(GetConsoleWindow(), SW_HIDE);
             #endif
-
-            /*
-            if (args.Length > 0)
-                ShowWindow(GetConsoleWindow(), SW_HIDE);
-                */
 
             Run();
 
