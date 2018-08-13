@@ -289,8 +289,9 @@ namespace FFXIVRichPresenceRunner.Memory
                 if (theProc != null && !theProc.Responding)
                     return false;
 
-                pHandle = OpenProcess(0x1F0FFF, true, pid);
-                Process.EnterDebugMode();
+                //pHandle = OpenProcess(0x1F0FFF, true, pid);
+                pHandle = theProc.Handle;
+                //Process.EnterDebugMode();
 
                 if (pHandle == IntPtr.Zero)
                 {
