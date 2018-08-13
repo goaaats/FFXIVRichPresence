@@ -5,6 +5,8 @@ A FFXIV Rich Presence mod via memory.
 
 Since, due to discord's limits(512 assets), it's not possible to have cover pictures for every single zone, I decided to group pictures by Area(e.g. Kugane, La Noscea, Dravania) and all jobs.
 
+Currently, only ffxiv_dx11 is supported.
+
 Displays:
 * Character Name + FC Tag
 * Character Job + Level
