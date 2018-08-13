@@ -6,3 +6,7 @@ Since, due to discord's limits(512 assets), it's not possible to have cover pict
 Components:
 * FFXIVRichPresenceRunner: Reads game memory, fetches needed data via xivapi and updates discord presence via [DiscordRPC](https://github.com/Lachee/discord-rpc-csharp)
 * dump64: Gets ran by the game if in the game folder and launches FFXIVRichPresenceRunner.
+
+Maintenance:
+* Fix pointers and offsets in Definitions.cs and definitions.json for live updates
+* Add new cover images for areas: zone_{zone name with all symbols and spaces removed}
