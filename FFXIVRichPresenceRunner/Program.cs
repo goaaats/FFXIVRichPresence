@@ -31,6 +31,10 @@ namespace FFXIVRichPresenceRunner
                 Thread.Sleep(200);
             }
 
+            #if !DEBUG
+            ShowWindow(GetConsoleWindow(), SW_HIDE);
+            #endif
+
             /*
             if (args.Length > 0)
                 ShowWindow(GetConsoleWindow(), SW_HIDE);

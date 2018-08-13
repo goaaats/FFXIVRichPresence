@@ -26,10 +26,10 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="dump.cpp">
+    <ClCompile Include="dllmain.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="dllmain.cpp">
+    <ClCompile Include="dump64.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
