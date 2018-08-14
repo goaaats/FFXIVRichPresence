@@ -71,7 +71,7 @@ namespace FFXIVRichPresenceRunner
                 Environment.Exit(0);
             }
 
-            var discordManager = new Discord();
+            var discordManager = new Discord(DefaultPresence);
 
             var memoryManager = new MemoryManager(memory);
 

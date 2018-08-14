@@ -9,9 +9,9 @@ namespace FFXIVRichPresenceRunner
     {
         public DiscordRpcClient _rpcClient;
 
-        public Discord()
+        public Discord(RichPresence initialPresence)
         {
-            Initialize();
+            Initialize(initialPresence);
         }
 
         public void Update()
@@ -34,7 +34,7 @@ namespace FFXIVRichPresenceRunner
                 _rpcClient.SetPresence(presence);
         }
 
-        private void Initialize()
+        private void Initialize(RichPresence presence)
         {
             /*
             Create a discord client
@@ -52,7 +52,7 @@ namespace FFXIVRichPresenceRunner
             //Connect to the RPC
             _rpcClient.Initialize();
 
-            _rpcClient.SetPresence(new RichPresence());
+            _rpcClient.SetPresence(presence);
         }
     }
 }
