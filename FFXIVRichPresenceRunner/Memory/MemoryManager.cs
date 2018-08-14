@@ -69,7 +69,15 @@ namespace FFXIVRichPresenceRunner.Memory
             var entries = new List<ActorTableEntry>();
             var offsets = GetActorTableOffsetList();
 
-            foreach (var offset in offsets) entries.Add(GetActorTableEntry((long) offset));
+            foreach (var offset in offsets)
+            {
+                var entry = GetActorTableEntry((long) offset);
+
+                if (entry == null)
+                    return null;
+
+                entries.Add(entry);
+            }
 
             return entries.ToArray();
         }
@@ -90,6 +98,9 @@ namespace FFXIVRichPresenceRunner.Memory
         {
             var data = _memory.readBytes(offset.ToString("X"), 0x1800);
             //Debug.WriteLine(Util.ByteArrayToHex(data));
+
+            if (data == null)
+                return null;
 
             return new ActorTableEntry
             {

@@ -71,9 +71,21 @@ namespace FFXIVRichPresenceRunner
                 discordManager.Update();
                 var table = memoryManager.GetActorTable();
 
+                if (table == null)
+                {
+                    discordManager.SetDefaultPresence();
+                    continue;
+                }
+
                 if (table.Length > 0)
                 {
                     var player = table[0];
+
+                    if(player.ActorID == 0)
+                    {
+                        discordManager.SetDefaultPresence();
+                        continue;
+                    }
 
                     var territoryType = memoryManager.GetTerritoryType();
 
