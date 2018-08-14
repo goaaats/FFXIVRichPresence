@@ -3,6 +3,8 @@ A FFXIV Rich Presence mod via memory.
 
 ![demo](https://i.imgur.com/lJeizBv.png)
 
+To install, simply extract the contents of the zip archive from the [Releases](https://github.com/goaaats/FFXIVRichPresence/releases) page and extract it to your game folder.
+
 Since, due to discord's limits(512 assets), it's not possible to have cover pictures for every single zone, I decided to group pictures by Area(e.g. Kugane, La Noscea, Dravania) and all jobs.
 
 Currently, only ffxiv_dx11 is supported.
