@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FFXIVRichPresenceRunner.Properties;
+using Microsoft.CSharp.RuntimeBinder;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -53,9 +54,18 @@ namespace FFXIVRichPresenceRunner
                 return _cachedTerritoryTypeZoneNames[territorytype];
 
             var res = await Get("TerritoryType/" + territorytype);
-            _cachedTerritoryTypeZoneNames.Add(territorytype, (string) res.PlaceNameZone.Name_en);
+            try
+            {
+                _cachedTerritoryTypeZoneNames.Add(territorytype, (string) res.PlaceNameZone.Name_en);
 
-            return res.PlaceNameZone.Name_en;
+                return res.PlaceNameZone.Name_en;
+            }
+            catch (RuntimeBinderException)
+            {
+                _cachedTerritoryTypeZoneNames.Add(territorytype, "default");
+
+                return "default";
+            }
         }
 
         public static async Task<string> GetPlaceNameForTerritoryType(int territorytype)
@@ -64,9 +74,19 @@ namespace FFXIVRichPresenceRunner
                 return _cachedTerritoryTypeNames[territorytype];
 
             var res = await Get("TerritoryType/" + territorytype);
-            _cachedTerritoryTypeNames.Add(territorytype, (string) res.PlaceName.Name_en);
 
-            return res.PlaceName.Name_en;
+            try
+            {
+                _cachedTerritoryTypeNames.Add(territorytype, (string) res.PlaceName.Name_en);
+
+                return res.PlaceName.Name_en;
+            }
+            catch
+            {
+                _cachedTerritoryTypeNames.Add(territorytype, "???");
+
+                return "???";
+            }
         }
 
         public static async Task<string> GetJobName(int jobId)

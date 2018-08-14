@@ -7,19 +7,6 @@ namespace FFXIVRichPresenceRunner
 {
     internal class Discord
     {
-        private readonly RichPresence DefaultPresence = new RichPresence
-        {
-            Details = "Unknown",
-            State = "",
-            Assets = new Assets
-            {
-                LargeImageKey = "eorzea_map",
-                LargeImageText = "",
-                SmallImageKey = "class_0",
-                SmallImageText = ""
-            }
-        };
-
         public DiscordRpcClient _rpcClient;
 
         public Discord()
@@ -47,11 +34,6 @@ namespace FFXIVRichPresenceRunner
                 _rpcClient.SetPresence(presence);
         }
 
-        public void SetDefaultPresence()
-        {
-            SetPresence(DefaultPresence);
-        }
-
         private void Initialize()
         {
             /*
@@ -70,8 +52,7 @@ namespace FFXIVRichPresenceRunner
             //Connect to the RPC
             _rpcClient.Initialize();
 
-            //Set the rich presence
-            _rpcClient.SetPresence(DefaultPresence);
+            _rpcClient.SetPresence(new RichPresence());
         }
     }
 }

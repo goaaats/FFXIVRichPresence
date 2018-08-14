@@ -47,6 +47,19 @@ namespace FFXIVRichPresenceRunner
             return process.ToList().Count > 0;
         }
 
+        private static readonly RichPresence DefaultPresence = new RichPresence
+        {
+            Details = "Unknown",
+            State = "",
+            Assets = new Assets
+            {
+                LargeImageKey = "zone_default",
+                LargeImageText = "",
+                SmallImageKey = "class_0",
+                SmallImageText = ""
+            }
+        };
+
         public static async void Run()
         {
             var memory = new Mem();
@@ -62,7 +75,7 @@ namespace FFXIVRichPresenceRunner
 
             var memoryManager = new MemoryManager(memory);
 
-            discordManager.SetDefaultPresence();
+            discordManager.SetPresence(DefaultPresence);
 
             while (true)
             {
@@ -71,7 +84,7 @@ namespace FFXIVRichPresenceRunner
 
                 if (table == null)
                 {
-                    discordManager.SetDefaultPresence();
+                    discordManager.SetPresence(DefaultPresence);
                     continue;
                 }
 
@@ -81,7 +94,7 @@ namespace FFXIVRichPresenceRunner
 
                     if(player.ActorID == 0)
                     {
-                        discordManager.SetDefaultPresence();
+                        discordManager.SetPresence(DefaultPresence);
                         continue;
                     }
 
@@ -109,7 +122,7 @@ namespace FFXIVRichPresenceRunner
                 }
                 else
                 {
-                    discordManager.SetDefaultPresence();
+                    discordManager.SetPresence(DefaultPresence);
                 }
 
                 Thread.Sleep(1000);
