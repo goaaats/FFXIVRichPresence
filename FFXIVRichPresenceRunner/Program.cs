@@ -21,8 +21,6 @@ namespace FFXIVRichPresenceRunner
 
         private static void Main(string[] args)
         {
-            Console.WriteLine(Definitions.Json);
-
             while (!DoesFfxivProcessExist())
             {
                 Console.WriteLine("Waiting for FFXIV process...");
@@ -99,7 +97,7 @@ namespace FFXIVRichPresenceRunner
                     discordManager.SetPresence(new RichPresence
                     {
                         Details = $"{player.Name.Substring(0, player.Name.IndexOf("\0"))}{fcName}",
-                        //State = await XivApi.GetNameForWorld(player.World),
+                        State = await XivApi.GetNameForWorld(player.World),
                         Assets = new Assets
                         {
                             LargeImageKey = zoneAsset,

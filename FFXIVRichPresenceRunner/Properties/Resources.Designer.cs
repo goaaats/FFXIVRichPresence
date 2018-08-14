@@ -59,5 +59,53 @@ namespace FFXIVRichPresenceRunner.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die [
+        ///  {
+        ///    &quot;Index&quot;: 0,
+        ///    &quot;Name&quot;: &quot;crossworld&quot;
+        ///  },
+        ///  {
+        ///    &quot;Index&quot;: 1,
+        ///    &quot;Name&quot;: &quot;c-funereus&quot;
+        ///  },
+        ///  {
+        ///    &quot;Index&quot;: 2,
+        ///    &quot;Name&quot;: &quot;c-contents&quot;
+        ///  },
+        ///  {
+        ///    &quot;Index&quot;: 3,
+        ///    &quot;Name&quot;: &quot;c-whiteae&quot;
+        ///  },
+        ///  {
+        ///    &quot;Index&quot;: 4,
+        ///    &quot;Name&quot;: &quot;c-baudinii&quot;
+        ///  },
+        ///  {
+        ///    &quot;Index&quot;: 5,
+        ///    &quot;Name&quot;: &quot;c-contents2&quot;
+        ///  },
+        ///  {
+        ///    &quot;Index&quot;: 16,
+        ///    &quot;Name&quot;: &quot;konconv&quot;
+        ///  },
+        ///  {
+        ///    &quot;Index&quot;: 23,
+        ///    &quot;Name&quot;: &quot;Asura&quot;
+        ///  },
+        ///  {
+        ///    &quot;Index&quot;: 24,
+        ///    &quot;Name&quot;: &quot;Belias&quot;
+        ///  },
+        ///  {
+        ///    &quot;Index&quot;: 25,
+        ///    &quot;Name [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+        /// </summary>
+        internal static string worlds {
+            get {
+                return ResourceManager.GetString("worlds", resourceCulture);
+            }
+        }
     }
 }

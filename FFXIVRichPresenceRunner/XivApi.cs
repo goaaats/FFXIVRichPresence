@@ -1,6 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using FFXIVRichPresenceRunner.Properties;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace FFXIVRichPresenceRunner
@@ -14,8 +19,20 @@ namespace FFXIVRichPresenceRunner
         private static readonly Dictionary<int, string> _cachedJobNames = new Dictionary<int, string>();
         private static readonly Dictionary<int, string> _cachedWorldNames = new Dictionary<int, string>();
 
+        public partial class World
+        {
+            [JsonProperty("Index")]
+            public long Index { get; set; }
+
+            [JsonProperty("Name")]
+            public string Name { get; set; }
+        }
+
         public static async Task<string> GetNameForWorld(int world)
         {
+            /*
+            Temporarily unused till XivApi fixes World endpoint
+
             if (_cachedWorldNames.ContainsKey(world))
                 return _cachedWorldNames[world];
 
@@ -23,6 +40,11 @@ namespace FFXIVRichPresenceRunner
             _cachedWorldNames.Add(world, (string) res.PlaceNameZone.Name_en);
 
             return res.PlaceNameZone.Name_en;
+            */
+
+            var worlds = JsonConvert.DeserializeObject<World[]>(Resources.worlds);
+
+            return worlds.First(x => x.Index == world).Name;
         }
 
         public static async Task<string> GetPlaceNameZoneForTerritoryType(int territorytype)
