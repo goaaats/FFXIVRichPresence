@@ -11,6 +11,8 @@ namespace FFXIVRichPresenceRunner
 {
     internal class Program
     {
+        private const string ClientID = "478143453536976896";
+
         private const int SW_HIDE = 0;
 
         [DllImport("kernel32.dll")]
@@ -26,6 +28,8 @@ namespace FFXIVRichPresenceRunner
                 Console.WriteLine("Waiting for FFXIV process...");
                 Thread.Sleep(200);
             }
+
+            Console.WriteLine(Definitions.Json);
 
             #if !DEBUG
             ShowWindow(GetConsoleWindow(), SW_HIDE);
@@ -71,7 +75,7 @@ namespace FFXIVRichPresenceRunner
                 Environment.Exit(0);
             }
 
-            var discordManager = new Discord(DefaultPresence);
+            var discordManager = new Discord(DefaultPresence, ClientID);
 
             var memoryManager = new MemoryManager(memory);
 

@@ -9,9 +9,20 @@ namespace FFXIVRichPresenceRunner
     {
         public DiscordRpcClient _rpcClient;
 
-        public Discord(RichPresence initialPresence)
+        public Discord(RichPresence initialPresence, string clientId)
         {
-            Initialize(initialPresence);
+            _rpcClient = new DiscordRpcClient(clientId, true);
+
+            //Set the logger
+            _rpcClient.Logger = new ConsoleLogger {Level = LogLevel.Warning};
+
+            //Subscribe to events
+            _rpcClient.OnPresenceUpdate += (sender, e) => { Console.WriteLine("Received Update! {0}", e.Presence); };
+
+            //Connect to the RPC
+            _rpcClient.Initialize();
+
+            _rpcClient.SetPresence(initialPresence);
         }
 
         public void Update()
@@ -32,27 +43,6 @@ namespace FFXIVRichPresenceRunner
                 presence.Assets.SmallImageText != _rpcClient.CurrentPresence.Assets.SmallImageText ||
                 presence.Assets.LargeImageText != _rpcClient.CurrentPresence.Assets.LargeImageText)
                 _rpcClient.SetPresence(presence);
-        }
-
-        private void Initialize(RichPresence presence)
-        {
-            /*
-            Create a discord client
-            NOTE: 	If you are using Unity3D, you must use the full constructor and define
-                     the pipe connection as DiscordRPC.IO.NativeNamedPipeClient
-            */
-            _rpcClient = new DiscordRpcClient(Definitions.Instance.ClientID, true);
-
-            //Set the logger
-            _rpcClient.Logger = new ConsoleLogger {Level = LogLevel.Warning};
-
-            //Subscribe to events
-            _rpcClient.OnPresenceUpdate += (sender, e) => { Console.WriteLine("Received Update! {0}", e.Presence); };
-
-            //Connect to the RPC
-            _rpcClient.Initialize();
-
-            _rpcClient.SetPresence(presence);
         }
     }
 }
