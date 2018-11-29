@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Windows.Forms;
 using DiscordRPC;
 using Newtonsoft.Json;
 
@@ -32,6 +33,14 @@ namespace FFXIVRichPresenceRunner
             #if !DEBUG
             ShowWindow(GetConsoleWindow(), SW_HIDE);
             #endif
+
+            AppDomain.CurrentDomain.UnhandledException += delegate(object sender, UnhandledExceptionEventArgs eventArgs)
+            {
+                MessageBox.Show("RichPresence mod ran into an error:\n\n" + eventArgs.ExceptionObject,
+                    "FFXIV RichPresence", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    
+                Process.GetCurrentProcess().Kill();
+            };
 
             Run();
 
