@@ -1,7 +1,6 @@
 ﻿using System;
 using DiscordRPC;
 using DiscordRPC.Logging;
-using FFXIVRichPresenceRunner.Memory;
 
 namespace FFXIVRichPresenceRunner
 {

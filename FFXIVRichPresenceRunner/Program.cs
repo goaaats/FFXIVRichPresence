@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using DiscordRPC;
-using FFXIVRichPresenceRunner.Memory;
+using Newtonsoft.Json;
 
 namespace FFXIVRichPresenceRunner
 {
@@ -28,8 +28,6 @@ namespace FFXIVRichPresenceRunner
                 Console.WriteLine("Waiting for FFXIV process...");
                 Thread.Sleep(200);
             }
-
-            Console.WriteLine(Definitions.Json);
 
             #if !DEBUG
             ShowWindow(GetConsoleWindow(), SW_HIDE);
@@ -66,10 +64,11 @@ namespace FFXIVRichPresenceRunner
 
         public static async void Run()
         {
-            var memory = new Mem();
-            if (!memory.OpenProcess("ffxiv_dx11"))
+            var procList = Process.GetProcessesByName( "ffxiv_dx11" );
+
+            if (procList.Length == 0)
             {
-                Console.WriteLine("An error occurred opening the FFXIV process.\nPress any key to continue...");
+                Console.WriteLine("An error occurred opening the FFXIV process: Not found.\nPress any key to continue...");
 
                 Console.ReadKey();
                 Environment.Exit(0);
@@ -77,24 +76,25 @@ namespace FFXIVRichPresenceRunner
 
             var discordManager = new Discord(DefaultPresence, ClientID);
 
-            var memoryManager = new MemoryManager(memory);
+            var game = new Nhaama.FFXIV.Game(procList[0]);
+
+            Console.WriteLine(game.Process.GetSerializer().SerializeObject(game.Definitions, Formatting.Indented));
 
             discordManager.SetPresence(DefaultPresence);
 
             while (true)
             {
-                discordManager.Update();
-                var table = memoryManager.GetActorTable();
+                game.Update();
 
-                if (table == null)
+                if (game.ActorTable == null)
                 {
                     discordManager.SetPresence(DefaultPresence);
                     continue;
                 }
 
-                if (table.Length > 0)
+                if (game.ActorTable.Length > 0)
                 {
-                    var player = table[0];
+                    var player = game.ActorTable[0];
 
                     if(player.ActorID == 0)
                     {
@@ -102,18 +102,21 @@ namespace FFXIVRichPresenceRunner
                         continue;
                     }
 
-                    var territoryType = memoryManager.GetTerritoryType();
+                    var territoryType = game.TerritoryType;
 
                     var placename = await XivApi.GetPlaceNameZoneForTerritoryType(territoryType);
                     var zoneAsset = "zone_" + Regex.Replace(placename.ToLower(), "[^A-Za-z0-9]", "");
 
-                    var fcName = player.CompanyTag.Substring(0, player.CompanyTag.IndexOf("\0"));
+                    var fcName = player.CompanyTag;
 
-                    if (fcName != string.Empty) fcName = $" <{fcName}>";
+                    if (fcName != string.Empty)
+                    {
+                        fcName = $" <{fcName}>";
+                    }
 
                     discordManager.SetPresence(new RichPresence
                     {
-                        Details = $"{player.Name.Substring(0, player.Name.IndexOf("\0"))}{fcName}",
+                        Details = $"{player.Name}{fcName}",
                         State = await XivApi.GetNameForWorld(player.World),
                         Assets = new Assets
                         {
@@ -124,10 +127,7 @@ namespace FFXIVRichPresenceRunner
                         }
                     });
                 }
-                else
-                {
-                    discordManager.SetPresence(DefaultPresence);
-                }
+                
 
                 Thread.Sleep(1000);
 

@@ -31,21 +31,13 @@ namespace FFXIVRichPresenceRunner
 
         public static async Task<string> GetNameForWorld(int world)
         {
-            /*
-            Temporarily unused till XivApi fixes World endpoint
-
             if (_cachedWorldNames.ContainsKey(world))
                 return _cachedWorldNames[world];
 
             var res = await Get("World/" + world);
-            _cachedWorldNames.Add(world, (string) res.PlaceNameZone.Name_en);
+            _cachedWorldNames.Add(world, (string) res.Name);
 
-            return res.PlaceNameZone.Name_en;
-            */
-
-            var worlds = JsonConvert.DeserializeObject<World[]>(Resources.worlds);
-
-            return worlds.First(x => x.Index == world).Name;
+            return res.Name;
         }
 
         public static async Task<string> GetPlaceNameZoneForTerritoryType(int territorytype)
