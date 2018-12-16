@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -36,8 +37,7 @@ namespace FFXIVRichPresenceRunner
 
             AppDomain.CurrentDomain.UnhandledException += delegate(object sender, UnhandledExceptionEventArgs eventArgs)
             {
-                MessageBox.Show("RichPresence mod ran into an error:\n\n" + eventArgs.ExceptionObject,
-                    "FFXIV RichPresence", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                File.WriteAllText("RichPresenceException.txt", eventArgs.ExceptionObject.ToString());
                     
                 Process.GetCurrentProcess().Kill();
             };
@@ -93,6 +93,12 @@ namespace FFXIVRichPresenceRunner
 
             while (true)
             {
+                if (!DoesFfxivProcessExist())
+                {
+                    discordManager.Deinitialize();
+                    Environment.Exit(0);
+                }
+
                 game.Update();
 
                 if (game.ActorTable == null)
@@ -139,12 +145,6 @@ namespace FFXIVRichPresenceRunner
                 
 
                 Thread.Sleep(1000);
-
-                if (!DoesFfxivProcessExist())
-                {
-                    discordManager.Deinitialize();
-                    Environment.Exit(0);
-                }
             }
         }
     }
