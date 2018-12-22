@@ -46,6 +46,8 @@ namespace FFXIVRichPresenceRunner
 
             while (true)
             {
+                // Don't wanna burn CPUs
+                Thread.Sleep(1);
             }
         }
 
