@@ -19,7 +19,7 @@ Ideas:
 * Read player state flags and update the state: e.g. crafting, in party, in content, in battle, etc.
 
 Components:
-* FFXIVRichPresenceRunner: Reads game memory via [memory.dll](https://github.com/erfg12/memory.dll), fetches needed data via xivapi and updates discord presence via [DiscordRPC](https://github.com/Lachee/discord-rpc-csharp)
+* FFXIVRichPresenceRunner: Reads game memory via [Nhaama](https://github.com/goaaats/Nhaama), fetches needed data via xivapi and updates discord presence via [DiscordRPC](https://github.com/Lachee/discord-rpc-csharp)
 * dump64: Gets ran by the game if in the game folder and launches FFXIVRichPresenceRunner.
 
 Maintenance:
