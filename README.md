@@ -25,3 +25,6 @@ Components:
 Maintenance:
 * Fix pointers and offsets in Definitions.cs and definitions.json for live updates
 * Add new cover images for areas: zone_{zone name with all symbols and spaces removed}
+
+To consider:
+* This is an unofficial app - it's breaking the FFXIV ToS. It's very unlikely that SE will ever go out of their way to detect these kinds of modifications, but you're basically announcing that you're using it. There's an ever so slight risk of negative consequences.
