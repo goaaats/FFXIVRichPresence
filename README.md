@@ -19,9 +19,12 @@ Ideas:
 * Read player state flags and update the state: e.g. crafting, in party, in content, in battle, etc.
 
 Components:
-* FFXIVRichPresenceRunner: Reads game memory via [memory.dll](https://github.com/erfg12/memory.dll), fetches needed data via xivapi and updates discord presence via [DiscordRPC](https://github.com/Lachee/discord-rpc-csharp)
+* FFXIVRichPresenceRunner: Reads game memory via [Nhaama](https://github.com/goaaats/Nhaama), fetches needed data via xivapi and updates discord presence via [DiscordRPC](https://github.com/Lachee/discord-rpc-csharp)
 * dump64: Gets ran by the game if in the game folder and launches FFXIVRichPresenceRunner.
 
 Maintenance:
 * Fix pointers and offsets in Definitions.cs and definitions.json for live updates
 * Add new cover images for areas: zone_{zone name with all symbols and spaces removed}
+
+To consider:
+* This is an unofficial app - it's breaking the FFXIV ToS. It's very unlikely that SE will ever go out of their way to detect these kinds of modifications, but you're basically announcing that you're using it. There's an ever so slight risk of negative consequences.
