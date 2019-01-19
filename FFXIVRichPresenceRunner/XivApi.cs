@@ -14,6 +14,7 @@ namespace FFXIVRichPresenceRunner
     public static class XivApi
     {
         private const string URL = "http://xivapi.com/";
+        private const string Key = "1ef6047fe34b4b7a927f694e";
 
         private static readonly Dictionary<int, string> _cachedTerritoryTypeZoneNames = new Dictionary<int, string>();
         private static readonly Dictionary<int, string> _cachedTerritoryTypeNames = new Dictionary<int, string>();
@@ -99,7 +100,7 @@ namespace FFXIVRichPresenceRunner
             foreach (var parameter in parameters) requestParameters += parameter + "&";
 
             var client = new HttpClient();
-            var response = await client.PostAsync(URL + endpoint, new StringContent(requestParameters));
+            var response = await client.PostAsync(URL + endpoint + "?key=" + Key, new StringContent(requestParameters));
             var result = await response.Content.ReadAsStringAsync();
 
             return JObject.Parse(result);
