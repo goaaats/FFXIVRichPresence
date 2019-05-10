@@ -3,7 +3,7 @@ A FFXIV Rich Presence mod via memory.
 
 ![demo](https://i.imgur.com/lJeizBv.png)
 
-To install, simply extract the contents of the zip archive from the [Releases](https://github.com/goaaats/FFXIVRichPresence/releases) page and extract it to your game folder.
+Please use my [FFXIV launcher](https://github.com/goaaats/FFXIVQuickLauncher/releases/latest) to start and update this mod.
 
 Since, due to discord's limits(512 assets), it's not possible to have cover pictures for every single zone, I decided to group pictures by Area(e.g. Kugane, La Noscea, Dravania) and all jobs.
 
@@ -20,7 +20,7 @@ Ideas:
 
 Components:
 * FFXIVRichPresenceRunner: Reads game memory via [Nhaama](https://github.com/goaaats/Nhaama), fetches needed data via xivapi and updates discord presence via [DiscordRPC](https://github.com/Lachee/discord-rpc-csharp)
-* dump64: Gets ran by the game if in the game folder and launches FFXIVRichPresenceRunner.
+* ~~dump64: Gets ran by the game if in the game folder and launches FFXIVRichPresenceRunner.~~ (not needed anymore due to the launcher)
 
 Maintenance:
 * Fix pointers and offsets in Definitions.cs and definitions.json for live updates
