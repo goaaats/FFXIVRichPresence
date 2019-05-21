@@ -76,9 +76,9 @@ namespace FFXIVRichPresenceRunner
             }
             catch
             {
-                _cachedTerritoryTypeNames.Add(territorytype, "???");
+                _cachedTerritoryTypeNames.Add(territorytype, "default");
 
-                return "???";
+                return "default";
             }
         }
 

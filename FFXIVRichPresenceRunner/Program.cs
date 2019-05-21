@@ -23,24 +23,24 @@ namespace FFXIVRichPresenceRunner
         [DllImport("user32.dll")]
         private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
+        private static Process _ffxivProcess;
+
+        private static string _lastFc = String.Empty;
+
         private static void Main(string[] args)
         {
-            while (!DoesFfxivProcessExist())
-            {
-                Console.WriteLine("Waiting for FFXIV process...");
-                Thread.Sleep(200);
-            }
-
-            #if !DEBUG
-            ShowWindow(GetConsoleWindow(), SW_HIDE);
-            #endif
-
             AppDomain.CurrentDomain.UnhandledException += delegate(object sender, UnhandledExceptionEventArgs eventArgs)
             {
                 File.WriteAllText("RichPresenceException.txt", eventArgs.ExceptionObject.ToString());
                     
                 Process.GetCurrentProcess().Kill();
             };
+
+            _ffxivProcess = Process.GetProcessById(int.Parse(args[0]));
+
+            #if !DEBUG
+            ShowWindow(GetConsoleWindow(), SW_HIDE);
+            #endif
 
             Run();
 
@@ -53,11 +53,7 @@ namespace FFXIVRichPresenceRunner
 
         public static bool DoesFfxivProcessExist()
         {
-            var processes = Process.GetProcesses();
-
-            var process = processes.Where(x => x.ProcessName == "ffxiv_dx11");
-
-            return process.ToList().Count > 0;
+            return !_ffxivProcess.HasExited;
         }
 
         private static readonly RichPresence DefaultPresence = new RichPresence
@@ -75,19 +71,9 @@ namespace FFXIVRichPresenceRunner
 
         public static async void Run()
         {
-            var procList = Process.GetProcessesByName( "ffxiv_dx11" );
-
-            if (procList.Length == 0)
-            {
-                Console.WriteLine("An error occurred opening the FFXIV process: Not found.\nPress any key to continue...");
-
-                Console.ReadKey();
-                Environment.Exit(0);
-            }
-
             var discordManager = new Discord(DefaultPresence, ClientID);
 
-            var game = new Nhaama.FFXIV.Game(procList[0]);
+            var game = new Nhaama.FFXIV.Game(_ffxivProcess);
 
             Console.WriteLine(game.Process.GetSerializer().SerializeObject(game.Definitions, Formatting.Indented));
 
@@ -122,19 +108,35 @@ namespace FFXIVRichPresenceRunner
                     var territoryType = game.TerritoryType;
 
                     var placename = await XivApi.GetPlaceNameZoneForTerritoryType(territoryType);
+
+                    if (placename == "default")
+                    {
+                        placename = await XivApi.GetPlaceNameForTerritoryType(territoryType);
+                    }
+
                     var zoneAsset = "zone_" + Regex.Replace(placename.ToLower(), "[^A-Za-z0-9]", "");
 
                     var fcName = player.CompanyTag;
 
                     if (fcName != string.Empty)
                     {
+                        _lastFc = fcName;
                         fcName = $" <{fcName}>";
                     }
+                    else if (_lastFc != string.Empty)
+                    {
+                        fcName = $" <{_lastFc}>";
+                    }
+
+                    var worldName = await XivApi.GetNameForWorld(player.World);
+
+                    if (player.World != player.HomeWorld)
+                        worldName = $"{worldName} (🏠{await XivApi.GetNameForWorld(player.HomeWorld)})";
 
                     discordManager.SetPresence(new RichPresence
                     {
                         Details = $"{player.Name}{fcName}",
-                        State = await XivApi.GetNameForWorld(player.World),
+                        State = worldName,
                         Assets = new Assets
                         {
                             LargeImageKey = zoneAsset,
