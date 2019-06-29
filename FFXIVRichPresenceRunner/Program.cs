@@ -36,7 +36,10 @@ namespace FFXIVRichPresenceRunner
                 Process.GetCurrentProcess().Kill();
             };
 
-            _ffxivProcess = Process.GetProcessById(int.Parse(args[0]));
+            var pid = int.Parse(args[0]);
+
+            _ffxivProcess = null;
+            _ffxivProcess = pid == -1 ? Process.GetProcessesByName("ffxiv_dx11")[0] : Process.GetProcessById(pid);
 
             #if !DEBUG
             ShowWindow(GetConsoleWindow(), SW_HIDE);
@@ -51,8 +54,9 @@ namespace FFXIVRichPresenceRunner
             }
         }
 
-        public static bool DoesFfxivProcessExist()
+        private static bool DoesFfxivProcessExist()
         {
+            _ffxivProcess.Refresh();
             return !_ffxivProcess.HasExited;
         }
 
@@ -109,7 +113,7 @@ namespace FFXIVRichPresenceRunner
 
                     var placename = await XivApi.GetPlaceNameZoneForTerritoryType(territoryType);
 
-                    if (placename == "default")
+                    if (placename == "default" || placename == "Norvrandt")
                     {
                         placename = await XivApi.GetPlaceNameForTerritoryType(territoryType);
                     }
@@ -146,7 +150,6 @@ namespace FFXIVRichPresenceRunner
                         }
                     });
                 }
-                
 
                 Thread.Sleep(1000);
             }
