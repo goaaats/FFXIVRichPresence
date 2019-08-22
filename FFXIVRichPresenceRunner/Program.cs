@@ -66,7 +66,7 @@ namespace FFXIVRichPresenceRunner
             State = "",
             Assets = new Assets
             {
-                LargeImageKey = "zone_default",
+                LargeImageKey = "li_1",
                 LargeImageText = "",
                 SmallImageKey = "class_0",
                 SmallImageText = ""
@@ -89,6 +89,7 @@ namespace FFXIVRichPresenceRunner
                 {
                     discordManager.Deinitialize();
                     Environment.Exit(0);
+                    return;
                 }
 
                 game.Update();
@@ -111,14 +112,9 @@ namespace FFXIVRichPresenceRunner
 
                     var territoryType = game.TerritoryType;
 
-                    var placename = await XivApi.GetPlaceNameZoneForTerritoryType(territoryType);
+                    var loadingImageKey = await XivApi.GetLoadingImageKeyForTerritoryType(territoryType);
 
-                    if (placename == "default" || placename == "Norvrandt")
-                    {
-                        placename = await XivApi.GetPlaceNameForTerritoryType(territoryType);
-                    }
-
-                    var zoneAsset = "zone_" + Regex.Replace(placename.ToLower(), "[^A-Za-z0-9]", "");
+                    var largeImageKey = $"li_{loadingImageKey}";
 
                     var fcName = player.CompanyTag;
 
@@ -143,7 +139,7 @@ namespace FFXIVRichPresenceRunner
                         State = worldName,
                         Assets = new Assets
                         {
-                            LargeImageKey = zoneAsset,
+                            LargeImageKey = largeImageKey,
                             LargeImageText = await XivApi.GetPlaceNameForTerritoryType(territoryType),
                             SmallImageKey = $"class_{player.Job}",
                             SmallImageText = await XivApi.GetJobName(player.Job) + " Lv." + player.Level

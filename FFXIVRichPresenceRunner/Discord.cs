@@ -10,7 +10,7 @@ namespace FFXIVRichPresenceRunner
 
         public Discord(RichPresence initialPresence, string clientId)
         {
-            _rpcClient = new DiscordRpcClient(clientId, true);
+            _rpcClient = new DiscordRpcClient(clientId);
 
             //Set the logger
             _rpcClient.Logger = new ConsoleLogger {Level = LogLevel.Warning};

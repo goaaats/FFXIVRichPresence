@@ -16,8 +16,7 @@ namespace FFXIVRichPresenceRunner
         private const string URL = "http://xivapi.com/";
         private const string Key = "1ef6047fe34b4b7a927f694e";
 
-        private static readonly Dictionary<int, string> _cachedTerritoryTypeZoneNames = new Dictionary<int, string>();
-        private static readonly Dictionary<int, string> _cachedTerritoryTypeNames = new Dictionary<int, string>();
+        private static readonly Dictionary<int, JObject> _cachedTerritoryType = new Dictionary<int, JObject>();
         private static readonly Dictionary<int, string> _cachedJobNames = new Dictionary<int, string>();
         private static readonly Dictionary<int, string> _cachedWorldNames = new Dictionary<int, string>();
 
@@ -41,44 +40,72 @@ namespace FFXIVRichPresenceRunner
             return res.Name;
         }
 
-        public static async Task<string> GetPlaceNameZoneForTerritoryType(int territorytype)
+        public static async Task<int> GetLoadingImageKeyForTerritoryType(int territorytype)
         {
-            if (_cachedTerritoryTypeZoneNames.ContainsKey(territorytype))
-                return _cachedTerritoryTypeZoneNames[territorytype];
+            if (_cachedTerritoryType.ContainsKey(territorytype))
+            {
+                dynamic cachedRes = _cachedTerritoryType[territorytype];
+                return (int) cachedRes.LoadingImageTargetID;
+            }
 
             var res = await Get("TerritoryType/" + territorytype);
             try
             {
-                _cachedTerritoryTypeZoneNames.Add(territorytype, (string) res.PlaceNameZone.Name_en);
+                _cachedTerritoryType.Add(territorytype, res);
 
-                return res.PlaceNameZone.Name_en;
+                return (int) res.LoadingImageTargetID;
             }
             catch (RuntimeBinderException)
             {
-                _cachedTerritoryTypeZoneNames.Add(territorytype, "default");
+                _cachedTerritoryType.Add(territorytype, res);
 
-                return "default";
+                return 1;
+            }
+        }
+
+        public static async Task<string> GetPlaceNameZoneForTerritoryType(int territorytype)
+        {
+            if (_cachedTerritoryType.ContainsKey(territorytype))
+            {
+                dynamic cachedRes = _cachedTerritoryType[territorytype];
+                return (string) cachedRes.PlaceNameZone.Name_en;
+            }
+
+            var res = await Get("TerritoryType/" + territorytype);
+            try
+            {
+                _cachedTerritoryType.Add(territorytype, res);
+
+                return (string) res.PlaceNameZone.Name_en;
+            }
+            catch (RuntimeBinderException)
+            {
+                _cachedTerritoryType.Add(territorytype, res);
+
+                return "Not Found";
             }
         }
 
         public static async Task<string> GetPlaceNameForTerritoryType(int territorytype)
         {
-            if (_cachedTerritoryTypeNames.ContainsKey(territorytype))
-                return _cachedTerritoryTypeNames[territorytype];
+            if (_cachedTerritoryType.ContainsKey(territorytype))
+            {
+                dynamic cachedRes = _cachedTerritoryType[territorytype];
+                return (string) cachedRes.PlaceName.Name_en;
+            }
 
             var res = await Get("TerritoryType/" + territorytype);
-
             try
             {
-                _cachedTerritoryTypeNames.Add(territorytype, (string) res.PlaceName.Name_en);
+                _cachedTerritoryType.Add(territorytype, res);
 
-                return res.PlaceName.Name_en;
+                return (string) res.PlaceName.Name_en;
             }
-            catch
+            catch (RuntimeBinderException)
             {
-                _cachedTerritoryTypeNames.Add(territorytype, "default");
+                _cachedTerritoryType.Add(territorytype, res);
 
-                return "default";
+                return "Not Found";
             }
         }
 

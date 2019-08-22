@@ -1,3 +1,6 @@
 [submodule "lib/Nhaama"]
 	path = lib/Nhaama
 	url = https://github.com/goaaats/Nhaama
+[submodule "lib/discord-rpc-csharp"]
+	path = lib/discord-rpc-csharp
+	url = git@github.com:Lachee/discord-rpc-csharp.git
